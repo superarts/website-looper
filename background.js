@@ -14,59 +14,65 @@
  * limitations under the License.
  */
 
+try {
+    importScripts('common.js');
+} catch (e) {
+    // console.error(e);
+}
+
 var History = {};
 
-chrome.browserAction.setBadgeText({ 'text': '?'});
-chrome.browserAction.setBadgeBackgroundColor({ 'color': "#777" });
+chrome.action.setBadgeText({ 'text': '?'});
+chrome.action.setBadgeBackgroundColor({ 'color': "#777" });
 
 function Update(t, tabId, url) {
-  if (!url) {
-    return;
-  }
-  if (tabId in History) {
-    if (url == History[tabId][0][1]) {
-      return;
+    if (!url) {
+        return;
     }
-  } else {
-    History[tabId] = [];
-  }
-  History[tabId].unshift([t, url]);
+    if (tabId in History) {
+        if (url == History[tabId][0][1]) {
+            return;
+        }
+    } else {
+        History[tabId] = [];
+    }
+    History[tabId].unshift([t, url]);
 
-  var history_limit = parseInt(localStorage["history_size"]);
-  if (! history_limit) {
-    history_limit = 23;
-  }
-  while (History[tabId].length > history_limit) {
-    History[tabId].pop();
-  }
+    var history_limit = 23; //parseInt(localStorage["history_size"]);
+    if (! history_limit) {
+        history_limit = 23;
+    }
+    while (History[tabId].length > history_limit) {
+        History[tabId].pop();
+    }
 
-  chrome.browserAction.setBadgeText({ 'tabId': tabId, 'text': '0:00'});
-  chrome.browserAction.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId});
+    chrome.action.setBadgeText({ 'tabId': tabId, 'text': '0:00'});
+    chrome.action.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId});
 }
 
 function HandleUpdate(tabId, changeInfo, tab) {
-  Update(new Date(), tabId, changeInfo.url);
+    Update(new Date(), tabId, changeInfo.url);
 }
 
 function HandleRemove(tabId, removeInfo) {
-  delete History[tabId];
+    delete History[tabId];
 }
 
 function HandleReplace(addedTabId, removedTabId) {
-  var t = new Date();
-  delete History[removedTabId];
-  chrome.tabs.get(addedTabId, function(tab) {
-    Update(t, addedTabId, tab.url);
-  });
+    var t = new Date();
+    delete History[removedTabId];
+    chrome.tabs.get(addedTabId, function(tab) {
+        Update(t, addedTabId, tab.url);
+    });
 }
 
 
 function UpdateBadges() {
-  var now = new Date();
-  for (tabId in History) {
-    var description = FormatDuration(now - History[tabId][0][0]);
-    chrome.browserAction.setBadgeText({ 'tabId': parseInt(tabId), 'text': description});
-  }
+    var now = new Date();
+    for (tabId in History) {
+        var description = FormatDuration(now - History[tabId][0][0]);
+        chrome.action.setBadgeText({ 'tabId': parseInt(tabId), 'text': description});
+    }
 }
 
 setInterval(UpdateBadges, 1000);

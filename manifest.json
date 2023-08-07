@@ -1,31 +1,24 @@
 {
-  "manifest_version": 2,
+    "manifest_version": 3,
 
-  "name": "Page Timer",
-  "description": "How long have I been on this page?",
-  "version": "1.7",
-  "author": "sworley@google.com",
+    "name": "SuperArts Website Looper",
+    "description": "Loop through and reload the current page with a list of websites with a timer interval.",
+    "version": "1.0",
+    "author": "leo@superarts.org",
 
-  "permissions": [
-    "tabs"
-  ],
-  "icons": {
-    "16": "clock16.png",
-    "48": "clock48.png",
-    "128": "clock128.png"
-  },
-  "browser_action": {
-    "default_icon": {
-      "19": "browser-action-19.png",
-      "38": "browser-action-38.png"
-    }
-  },
-  "background": {
-    "scripts": [
-      "common.js",
-      "background.js"
-      ],
-    "persistent": true
-  },
-  "options_page": "options.html"
+    "permissions": [
+        "tabs"
+    ],
+    "icons": {
+        "16": "image/icon/icon16.png",
+        "32": "image/icon/icon32.png",
+        "48": "image/icon/icon48.png",
+        "128": "image/icon/icon128.png"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": { 
+    },
+    "options_page": "options.html"
 }

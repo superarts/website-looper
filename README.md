@@ -1,3 +1,9 @@
+# SuperArts Website Looper
+
+Loop through and reload the current page with a list of websites with a timer interval.
+
+This project is forked from [a sample project below](https://github.com/google/page-timer).
+
 ## How long have I been on this page?
 
 Ever open an email, do a task, then wonder how long that took?  Install this,
