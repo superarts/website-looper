@@ -31,4 +31,6 @@ Loop through and reload the current page with a list of websites with a timer in
 - Google: this project is forked from [a sample project from Google](https://github.com/google/page-timer)
 - New Bing: artwork and icons.
 - PayPal: donation button.
-- YouTube: [How to write a Chrome Extension from the ground up](https://youtu.be/2_OFK0udZnQ)
+- YouTube: hosting videos.
+  - [How to write a Chrome Extension from the ground up](https://youtu.be/2_OFK0udZnQ)
+  - [Introducing a Chrome Extension that helps you check price for multiple items in POE](https://youtu.be/xgyqflKsL1Q)
