@@ -15,14 +15,25 @@ limitations under the License.
 -->
 
 <html>
-  <head>
-    <style>
-      td { white-space: nowrap; }
-    </style>
-  </head>
-  <body>
-    <a href=""></a> <!-- Eat focus -->
-    <script src="common.js"></script>
-    <script src="popup.js"></script>
-  </body>
+    <head>
+        <style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+        </style>
+        <script src="popup.js"></script>
+    </head>
+    <body>
+        <textarea id="textAreaURLs" name="textURL" rows="10" cols="80" placeholder="Enter website URLs here. Each line should contain a full URL string, without leading or trailing spaces. If it's not a valid URL, it will be treated as a comment. It is recommended to avoid using multi-line comments, and comments should come before URLs."></textarea>
+        <hr />
+        <button id="buttonSave">Save</button>
+        <!--
+            <p id="paragraphURLs">Websites: 0</p>
+        -->
+        <hr />
+        <table frame="box" id="tableURLs">Websites</table>
+        <hr />
+        <button id="buttonToggle">Toggle</button>
+    </body>
 </html>

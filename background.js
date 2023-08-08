@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
+/*
 try {
     importScripts('common.js');
 } catch (e) {
-    // console.error(e);
+    console.log(e);
 }
+*/
 
 var History = {};
+let isActive = false;
+let lastDate = new Date();
+const interval = 5000;
+let urlIndex = 0;
+let urls
 
-chrome.action.setBadgeText({ 'text': '?'});
-chrome.action.setBadgeBackgroundColor({ 'color': "#777" });
+chrome.action.setBadgeText({ 'text': '...'});
+// chrome.action.setBadgeBackgroundColor({ 'color': "#777" });
 
+/*
 function Update(t, tabId, url) {
     if (!url) {
         return;
@@ -51,11 +59,16 @@ function Update(t, tabId, url) {
 }
 
 function HandleUpdate(tabId, changeInfo, tab) {
-    Update(new Date(), tabId, changeInfo.url);
+    let now = new Date();
+    Update(now, tabId, changeInfo.url);
+    console.log("updated");
+    // isActive = true;
 }
 
 function HandleRemove(tabId, removeInfo) {
     delete History[tabId];
+    console.log("removed");
+    // isActive = false;
 }
 
 function HandleReplace(addedTabId, removedTabId) {
@@ -65,18 +78,72 @@ function HandleReplace(addedTabId, removedTabId) {
         Update(t, addedTabId, tab.url);
     });
 }
+*/
 
-
-function UpdateBadges() {
+function LoopWebsite() {
     var now = new Date();
+    /*
     for (tabId in History) {
         var description = FormatDuration(now - History[tabId][0][0]);
         chrome.action.setBadgeText({ 'tabId': parseInt(tabId), 'text': description});
     }
+    */
+
+    if (isActive && urls.length > 0) {
+        const ms = now.getTime() - lastDate.getTime()
+        // console.log("now: " + now);
+        console.log("interval: " + ms);
+        if (ms >= interval) {
+            lastDate = now;
+            let url = urls[urlIndex];
+            urlIndex += 1;
+            if (urlIndex >= urls.length) {
+                urlIndex = 0;
+            }
+            chrome.tabs.update(undefined, { url: url });
+            console.log("reload: " + url);
+        }
+
+        //let url = "http://1.1.1.1/" + tabId
+        //chrome.tabs.update(undefined, { url: url });
+
+        const badge = Math.round(ms / 1000)
+        chrome.action.setBadgeText({ 'text': '' + badge});
+    } else {
+        chrome.action.setBadgeText({ 'text': 'off'});
+    }
 }
 
-setInterval(UpdateBadges, 1000);
+setInterval(LoopWebsite, 1000);
 
+/*
 chrome.tabs.onUpdated.addListener(HandleUpdate);
 chrome.tabs.onRemoved.addListener(HandleRemove);
 chrome.tabs.onReplaced.addListener(HandleReplace);
+
+chrome.extension.onMessage.addListener(
+    function(request, sender, sendResponse) { 
+        if (request.action == "openNewTab")
+            chrome.tabs.create({ url: request.url });
+    }
+);
+*/
+
+chrome.runtime.onMessage.addListener((request, sender, reply) => {
+    console.log(
+        sender.tab
+        ? "from a content script:" + sender.tab.url
+        : "from the extension"
+    );
+    if (request.command == "query-is-looping") {
+        if (request.shouldToggle && request.urlArray != null) {
+            isActive = !isActive;
+            console.log("background toggle: " + isActive);
+            urls = request.urlArray
+            console.log(urls)
+        }
+        reply({ isLooping: isActive });
+    }
+
+    return true;
+});
