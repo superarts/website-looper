@@ -25,7 +25,8 @@ try {
 var History = {};
 let isActive = false;
 let lastDate = new Date();
-const interval = 5000;
+let interval = 5000;
+let frequency = 1000;
 let urlIndex = 0;
 let urls
 
@@ -92,7 +93,7 @@ function LoopWebsite() {
     if (isActive && urls.length > 0) {
         const ms = now.getTime() - lastDate.getTime()
         // console.log("now: " + now);
-        console.log("interval: " + ms);
+        // console.log("interval: " + ms);
         if (ms >= interval) {
             lastDate = now;
             let url = urls[urlIndex];
@@ -107,14 +108,32 @@ function LoopWebsite() {
         //let url = "http://1.1.1.1/" + tabId
         //chrome.tabs.update(undefined, { url: url });
 
-        const badge = Math.round(ms / 1000)
-        chrome.action.setBadgeText({ 'text': '' + badge});
+        const passedTimeInSecond = Math.round(ms / 1000)
+        const intervalInSecond = Math.round(interval / 1000)
+        chrome.action.setBadgeText({ 'text': passedTimeInSecond + '/' + intervalInSecond});
     } else {
         chrome.action.setBadgeText({ 'text': 'off'});
     }
 }
 
-setInterval(LoopWebsite, 1000);
+function reload() {
+    chrome.storage.sync.get(["reloadInterval"]).then((result) => {
+        console.log("background loaded interval: " + result.reloadInterval)
+        if (result.reloadInterval != null) {
+            interval = result.reloadInterval * 1000
+            chrome.storage.sync.get(["timerFrequency"]).then((result) => {
+                console.log("background loaded frequency: " + result.timerFrequency)
+                if (result.timerFrequency != null) {
+                    frequency = result.timerFrequency * 1000
+                    console.log("background starting...")
+                    setInterval(LoopWebsite, frequency);
+                }
+            });
+        }
+    });
+}
+
+reload()
 
 /*
 chrome.tabs.onUpdated.addListener(HandleUpdate);
@@ -138,12 +157,13 @@ chrome.runtime.onMessage.addListener((request, sender, reply) => {
     if (request.command == "query-is-looping") {
         if (request.shouldToggle && request.urlArray != null) {
             isActive = !isActive;
-            console.log("background toggle: " + isActive);
+            console.log("background toggle: " + isActive)
             urls = request.urlArray
             console.log(urls)
         }
-        reply({ isLooping: isActive });
+        reply({ isLooping: isActive })
+        reload()
     }
 
-    return true;
+    return true
 });

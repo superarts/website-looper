@@ -55,6 +55,8 @@ let buttonSave
 let textURLs
 // let paragraphURLs
 let tableURLs
+let inputInterval
+let inputFrequency
 
 /// `shouldToggle`: toggle loop status
 function updateUI(shouldToggle) {
@@ -153,7 +155,13 @@ function save() {
     });
 
     chrome.storage.sync.set({ urlList: urlString }).then(() => {
-        console.log("popup saved");
+        console.log("popup saved url: " + urlString);
+    });
+    chrome.storage.sync.set({ reloadInterval: inputInterval.value }).then(() => {
+        console.log("popup saved interval: " + inputInterval.value);
+    });
+    chrome.storage.sync.set({ timerFrequency: inputFrequency.value }).then(() => {
+        console.log("popup saved: frequency: " + inputFrequency.value);
     });
 }
 
@@ -175,16 +183,34 @@ document.addEventListener("DOMContentLoaded", function() {
     textURLs = document.getElementById("textAreaURLs")
     // paragraphURLs = document.getElementById("paragraphURLs")
     tableURLs = document.getElementById("tableURLs")
+    inputInterval = document.getElementById("inputInterval")
+    inputFrequency = document.getElementById("inputFrequency")
 
     buttonToggle.addEventListener("click", toggle)
     buttonSave.addEventListener("click", save)
 
-    // Load URL list
-    chrome.storage.sync.get(["urlList"]).then((result) => {
-        console.log("popup loaded: " + result.urlList)
-        if (textURLs != null) {
-            textURLs.value = result.urlList
-            save()
+    // Load interval
+    chrome.storage.sync.get(["reloadInterval"]).then((result) => {
+        console.log("popup loaded: " + result.reloadInterval)
+        if (inputInterval != null && result.reloadInterval != null) {
+            inputInterval.value = result.reloadInterval
+
+            // Load frequency
+            chrome.storage.sync.get(["timerFrequency"]).then((result) => {
+                console.log("popup loaded: " + result.timerFrequency)
+                if (inputFrequency != null && result.timerFrequency != null) {
+                    inputFrequency.value = result.timerFrequency
+
+                    // Load URL list
+                    chrome.storage.sync.get(["urlList"]).then((result) => {
+                        console.log("popup loaded: " + result.urlList)
+                        if (textURLs != null) {
+                            textURLs.value = result.urlList
+                            save()
+                        }
+                    });
+                }
+            });
         }
     });
 

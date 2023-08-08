@@ -3,7 +3,7 @@
 
     "name": "SuperArts Website Looper",
     "description": "Loop through and reload the current page with a list of websites with a timer interval.",
-    "version": "1.0",
+    "version": "1.0.0",
     "author": "leo@superarts.org",
 
     "permissions": [

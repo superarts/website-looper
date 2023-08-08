@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/*
 function save_options() {
   localStorage["history_size"] = document.getElementById("history_size").value;
 
@@ -34,3 +35,4 @@ function restore_options() {
 
 document.addEventListener('DOMContentLoaded', restore_options);
 document.querySelector('#save').addEventListener('click', save_options);
+*/

@@ -15,16 +15,55 @@ limitations under the License.
 -->
 
 <html>
-<head><title>Page Timer Options</title></head>
+<head><title>SuperArts Website Looper</title></head>
 
 <body>
+    <h1>Website Looper</h1>
+    <p>Loop through and reload the current page with a list of websites with a timer interval.</p>
+    <h2>Features</h2>
+    <ul>
+        <li>Save a website list with notes and URLs on your chrome account.</li>
+        <li>Loop through all the websites after a customizable time period in the current browser window/tab.</li>
+        <li>Customizable timer frequency that is displayed on the extension button.</li>
+    </ul>
+    <h2>How to use</h2>
+    <ul>
+        <li>Left click the extension button to show the main UI - it is highly suggested to ping the button because it interact with the current browser window/tab.</li>
+        <li>Edit your website list. It is suggested to add a note in line 1, add a website address in line 2, add another note in line 2, add another website address in line 4, and so on.</li>
+        <li>Optional: edit Website loading interval. It means after a given seconds (60 seconds by default), the current page will be refreshed.</li>
+        <li>Optional: edit Timer frequency. It means after a given seconds (10 seconds by default), this extension checks whether the page should be refreshed, and update badge text on the extension icon.</li>
+        <li>Use the toggle button on the bottom of the UI to start/stop auto reloading.</li>
+    </ul>
+    <h2>About security concerns</h2>
+    <ul>
+        <li>This project is open source. You can always check the source code, and load it in developer mode.</li>
+        <li>Permissions Read your browsing history is used to get the current window/tab, this extension does not read the current website you are browsing.</li>
+        <li>Site access is used to save your website list and other preferences.</li>
+    </ul>
+    <h2>TODOs</h2>
+    <ol>
+        <li>Randomize loop order.</li>
+        <li>Manage multiple website lists.</li>
+        <li>Improve UI.</li>
+        <li>Improve UX.</li>
+        <li>Fix bugs.</li>
+        <li>Share your website list with others.</li>
+    </ul>
+    <hr />
+    <form action="https://www.paypal.com/donate" method="post" target="_top">
+        <input type="hidden" name="hosted_button_id" value="XM5T5UK9298S6" />
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+    </form>
+    <p>Please consider to donate a couple of coffee to help me support my family and add more features to this utility, I lost my job recently. Thank you!</p>
+    <!--
+        History size:
+        <input type="text" id="history_size" value="23"></input>
 
-History size:
-<input type="text" id="history_size" value="23"></input>
-
-<br>
-<div id="status"></div>
-<button id="save">Save</button>
+        <br>
+        <div id="status"></div>
+        <button id="save">Save</button>
+    -->
 </body>
 
 <script src="options.js"></script>

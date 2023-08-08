@@ -25,7 +25,13 @@ table, th, td {
         <script src="popup.js"></script>
     </head>
     <body>
-        <textarea id="textAreaURLs" name="textURL" rows="10" cols="80" placeholder="Enter website URLs here. Each line should contain a full URL string, without leading or trailing spaces. If it's not a valid URL, it will be treated as a comment. It is recommended to avoid using multi-line comments, and comments should come before URLs."></textarea>
+        <textarea id="textAreaURLs" name="urls" rows="10" cols="80" placeholder="Enter website URLs here. Each line should contain a full URL string, without leading or trailing spaces. If it's not a valid URL, it will be treated as a comment. It is recommended to avoid using multi-line comments, and comments should come before URLs."></textarea>
+        <hr />
+        <label for="inputInterval">Website loading interval: </label>
+        <input type="number" id="inputInterval" name="interval" min="5" max="3600" value="60"> second(s)</input>
+        <br />
+        <label for="inputFrequency">Timer frequency: </label>
+        <input type="number" id="inputFrequency" name="frequency" min="1" max="60" value="10"> second(s)</input>
         <hr />
         <button id="buttonSave">Save</button>
         <!--
