@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/// TODO: move some reusable codes to some common js files / libs.
 /*
 try {
     importScripts('common.js');
@@ -33,86 +34,29 @@ let urls
 chrome.action.setBadgeText({ 'text': '...'});
 // chrome.action.setBadgeBackgroundColor({ 'color': "#777" });
 
-/*
-function Update(t, tabId, url) {
-    if (!url) {
-        return;
-    }
-    if (tabId in History) {
-        if (url == History[tabId][0][1]) {
-            return;
-        }
-    } else {
-        History[tabId] = [];
-    }
-    History[tabId].unshift([t, url]);
-
-    var history_limit = 23; //parseInt(localStorage["history_size"]);
-    if (! history_limit) {
-        history_limit = 23;
-    }
-    while (History[tabId].length > history_limit) {
-        History[tabId].pop();
-    }
-
-    chrome.action.setBadgeText({ 'tabId': tabId, 'text': '0:00'});
-    chrome.action.setPopup({ 'tabId': tabId, 'popup': "popup.html#tabId=" + tabId});
-}
-
-function HandleUpdate(tabId, changeInfo, tab) {
-    let now = new Date();
-    Update(now, tabId, changeInfo.url);
-    console.log("updated");
-    // isActive = true;
-}
-
-function HandleRemove(tabId, removeInfo) {
-    delete History[tabId];
-    console.log("removed");
-    // isActive = false;
-}
-
-function HandleReplace(addedTabId, removedTabId) {
-    var t = new Date();
-    delete History[removedTabId];
-    chrome.tabs.get(addedTabId, function(tab) {
-        Update(t, addedTabId, tab.url);
-    });
-}
-*/
-
 function LoopWebsite() {
     var now = new Date();
-    /*
-    for (tabId in History) {
-        var description = FormatDuration(now - History[tabId][0][0]);
-        chrome.action.setBadgeText({ 'tabId': parseInt(tabId), 'text': description});
-    }
-    */
 
     if (isActive && urls.length > 0) {
         const ms = now.getTime() - lastDate.getTime()
         // console.log("now: " + now);
         // console.log("interval: " + ms);
         if (ms >= interval) {
-            lastDate = now;
-            let url = urls[urlIndex];
-            urlIndex += 1;
+            lastDate = now
+            let url = urls[urlIndex]
+            urlIndex += 1
             if (urlIndex >= urls.length) {
-                urlIndex = 0;
+                urlIndex = 0
             }
-            chrome.tabs.update(undefined, { url: url });
-            console.log("reload: " + url);
+            chrome.tabs.update(undefined, { url: url })
+            console.log("reload: " + url)
         }
-
-        //let url = "http://1.1.1.1/" + tabId
-        //chrome.tabs.update(undefined, { url: url });
 
         const passedTimeInSecond = Math.round(ms / 1000)
         const intervalInSecond = Math.round(interval / 1000)
-        chrome.action.setBadgeText({ 'text': passedTimeInSecond + '/' + intervalInSecond});
+        chrome.action.setBadgeText({ 'text': passedTimeInSecond + '/' + intervalInSecond})
     } else {
-        chrome.action.setBadgeText({ 'text': 'off'});
+        chrome.action.setBadgeText({ 'text': 'off'})
     }
 }
 
@@ -135,25 +79,13 @@ function reload() {
 
 reload()
 
-/*
-chrome.tabs.onUpdated.addListener(HandleUpdate);
-chrome.tabs.onRemoved.addListener(HandleRemove);
-chrome.tabs.onReplaced.addListener(HandleReplace);
-
-chrome.extension.onMessage.addListener(
-    function(request, sender, sendResponse) { 
-        if (request.action == "openNewTab")
-            chrome.tabs.create({ url: request.url });
-    }
-);
-*/
-
 chrome.runtime.onMessage.addListener((request, sender, reply) => {
     console.log(
         sender.tab
-        ? "from a content script:" + sender.tab.url
-        : "from the extension"
+        ? "background listener - message from a content script:" + sender.tab.url
+        : "background listener - message from the extension"
     );
+
     if (request.command == "query-is-looping") {
         if (request.shouldToggle && request.urlArray != null) {
             isActive = !isActive;

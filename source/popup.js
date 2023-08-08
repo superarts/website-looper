@@ -14,52 +14,27 @@
  * limitations under the License.
  */
 
-var tabId_re = /tabId=([0-9]+)/;
-var match = tabId_re.exec(window.location.hash);
-if (match) {
-    /*
-    var hist = chrome.extension.getBackgroundPage().History[match[1]];
-    var table = document.createElement("table");
-    for (var i=0; i < hist.length; i++) {
-        var r = table.insertRow(-1);
-
-        var date = "";
-        if (i == hist.length - 1 ||
-            (hist[i][0].toLocaleDateString() != hist[i+1][0].toLocaleDateString())) {
-            date = hist[i][0].toLocaleDateString();
-        }
-        r.insertCell(-1).textContent = date;
-
-        r.insertCell(-1).textContent = hist[i][0].toLocaleTimeString();
-
-        var end_time;
-        if (i == 0) {
-            end_time = new Date();
-        } else {
-            end_time = hist[i-1][0];
-        }
-        r.insertCell(-1).textContent = FormatDuration(end_time - hist[i][0]);
-
-        var a = document.createElement("a");
-        a.textContent = hist[i][1];
-        a.setAttribute("href", hist[i][1]);
-        a.setAttribute("target", "_blank");
-        r.insertCell(-1).appendChild(a);
-    }
-    document.body.appendChild(table);
-    */
-}
+/// UI elements.
 
 let buttonToggle
 let buttonSave
 let textURLs
 // let paragraphURLs
 let tableURLs
+
+/// TODO: rename to reloadInterval. How frequent the current window/tab should be reloaded.
 let inputInterval
+
+/// How frequent the background timer runs.
 let inputFrequency
 
+/// An array of URL strings to be sent to `background`.
+let urlArray = []
+
+/// TODO: rename to `updateButtonStatus` or whatever.
 /// `shouldToggle`: toggle loop status
 function updateUI(shouldToggle) {
+    /// TODO: rename `command` to `update-loop` or something like this.
     chrome.runtime.sendMessage({ command: "query-is-looping", shouldToggle: shouldToggle, urlArray: urlArray }, function (response) {
         console.log(response.isLooping);
         if (buttonToggle != null) {
@@ -70,20 +45,13 @@ function updateUI(shouldToggle) {
     });
 }
 
+/// Toggle background looping and update UI.
 function toggle() {
-    // chrome.extension.getBackgroundPage().console.log('xxxxxx');
     console.log("popup: toggle");
-    /*
-    chrome.extension.sendMessage({
-        action: "openNewTab",
-        url: "www.google.com"
-    });
-    */
     updateUI(true);
 }
 
-let urlArray = []
-
+/// TODO: rename to `updateTableAndSave`.
 function save() {
     if (textURLs == null || tableURLs == null) {
         console.log('popup save: unexpected null UI elements')
@@ -95,7 +63,6 @@ function save() {
     const urls = urlString.split(/\n/)
     console.log("popup URLs: " + urls)
     // paragraphURLs.textContent = textURLs.textContent
-    // tableURLs.textContent = textURLs.textContent
 
     tableURLs.innerHTML = ""
 
@@ -142,16 +109,6 @@ function save() {
             notes = ""
             url = null
         }
-
-        /*
-        const rowNode = document.createElement("tr")
-        const cellNode = document.createElement("td")
-        const textNode = document.createTextNode(url)
-
-        cellNode.appendChild(textNode)
-        rowNode.appendChild(cellNode)
-        tableURLs.appendChild(rowNode)
-        */
     });
 
     chrome.storage.sync.set({ urlList: urlString }).then(() => {
@@ -164,18 +121,6 @@ function save() {
         console.log("popup saved: frequency: " + inputFrequency.value);
     });
 }
-
-// document.getElementById('toggle').onclick = toggle;
-
-/*
-document.addEventListener('DOMContentLoaded', function() {
-    var link = document.getElementById('toggle');
-    // onClick's logic below:
-    link.addEventListener('click', function() {
-        toggle();
-    });
-});
-*/
 
 document.addEventListener("DOMContentLoaded", function() {
     buttonToggle = document.getElementById("buttonToggle")
@@ -211,10 +156,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     });
                 }
             });
+        } else {
+            console.log("popup failure: cannot load reloadInterval")
         }
     });
 
     updateUI(false)
 });
 
-console.log("popup loaded");
+console.log("popup loaded")
