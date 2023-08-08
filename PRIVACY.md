@@ -1,12 +1,5 @@
-Page-Timer Privacy Policy
-=========================
+# Privacy Policy
 
-All data is kept locally in ram; no data is sent over the network or saved to disk.
-
-Each tab's history is kept only as long as that tab is open.
-
-All data held by this extension is immediately visible in the UI -- click on the
-icon to see the history pop-up.  (You may have to scroll.)
-
-The only thing ever put in persistent storage is the history size setting (one
-number) configurable on the extension's Options page.
+- This project is open source. You can always check the source code, and load it in developer mode.
+- Permissions `Read your browsing history` is used to get the current window/tab, this extension does not read the current website you are browsing.
+- `Site access` is used to save your website list and other preferences.
