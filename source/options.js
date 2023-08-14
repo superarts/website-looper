@@ -40,28 +40,28 @@ function updateUI(shouldToggle) {
         if (buttonToggle != null) {
             buttonToggle.textContent = response.isLooping ? 'Looping: click to stop' : 'Not looping: click to start';
         } else {
-            console.log('popup: toggle button is null');
+            console.log('options: toggle button is null');
         }
     });
 }
 
 /// Toggle background looping and update UI.
 function toggle() {
-    console.log("popup: toggle");
+    console.log("options: toggle");
     updateUI(true);
 }
 
 /// TODO: rename to `updateTableAndSave`.
 function save() {
     if (textURLs == null || tableURLs == null) {
-        console.log('popup save: unexpected null UI elements')
+        console.log('options save: unexpected null UI elements')
         return
     }
-    console.log('popup: save')
+    console.log('options: save')
     const urlString = textURLs.value
-    console.log("popup text: " + urlString)
+    console.log("options text: " + urlString)
     const urls = urlString.split(/\n/)
-    console.log("popup URLs: " + urls)
+    console.log("options URLs: " + urls)
     // paragraphURLs.textContent = textURLs.textContent
 
     tableURLs.innerHTML = ""
@@ -112,13 +112,16 @@ function save() {
     });
 
     chrome.storage.sync.set({ urlList: urlString }).then(() => {
-        console.log("popup saved url: " + urlString);
+        console.log("options saved url: " + urlString);
     });
     chrome.storage.sync.set({ reloadInterval: inputInterval.value }).then(() => {
-        console.log("popup saved interval: " + inputInterval.value);
+        console.log("options saved interval: " + inputInterval.value);
     });
     chrome.storage.sync.set({ timerFrequency: inputFrequency.value }).then(() => {
-        console.log("popup saved: frequency: " + inputFrequency.value);
+        console.log("options saved: frequency: " + inputFrequency.value);
+    });
+    chrome.storage.sync.set({ urls: urlArray }).then(() => {
+        console.log("options saved: urls: " + urls);
     });
 }
 
@@ -136,19 +139,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Load interval
     chrome.storage.sync.get(["reloadInterval"]).then((result) => {
-        console.log("popup loaded: " + result.reloadInterval)
+        console.log("options loaded: " + result.reloadInterval)
         if (inputInterval != null && result.reloadInterval != null) {
             inputInterval.value = result.reloadInterval
 
             // Load frequency
             chrome.storage.sync.get(["timerFrequency"]).then((result) => {
-                console.log("popup loaded: " + result.timerFrequency)
+                console.log("options loaded: " + result.timerFrequency)
                 if (inputFrequency != null && result.timerFrequency != null) {
                     inputFrequency.value = result.timerFrequency
 
                     // Load URL list
                     chrome.storage.sync.get(["urlList"]).then((result) => {
-                        console.log("popup loaded: " + result.urlList)
+                        console.log("options loaded: " + result.urlList)
                         if (textURLs != null) {
                             textURLs.value = result.urlList
                             save()
@@ -157,11 +160,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             });
         } else {
-            console.log("popup failure: cannot load reloadInterval")
+            console.log("options failure: cannot load reloadInterval")
         }
-    });
+    })
 
     updateUI(false)
 });
 
-console.log("popup loaded")
+console.log("options loaded")

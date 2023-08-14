@@ -4,9 +4,14 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## Contents
 
+- [1.1.0](#110)
 - [1.0.0](#100)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 1.1.0
+
+- Updated UI: moved popup UI to options, and use browser button to toggle.
 
 ## 1.0.0
 

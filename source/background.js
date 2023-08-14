@@ -23,13 +23,13 @@ try {
 }
 */
 
-var History = {};
-let isActive = false;
-let lastDate = new Date();
-let interval = 5000;
-let frequency = 1000;
-let urlIndex = 0;
-let urls
+var History = {}
+let isActive = false
+let lastDate = new Date()
+let interval = 5000
+let frequency = 1000
+let urlIndex = 0
+let urls = []
 
 chrome.action.setBadgeText({ 'text': '...'});
 // chrome.action.setBadgeBackgroundColor({ 'color': "#777" });
@@ -70,14 +70,20 @@ function reload() {
                 if (result.timerFrequency != null) {
                     frequency = result.timerFrequency * 1000
                     console.log("background starting...")
-                    setInterval(LoopWebsite, frequency);
+
+                    // Load URL list
+                    chrome.storage.sync.get(["urls"]).then((result) => {
+                        console.log("options loaded: " + result.urls)
+                        if (result.urls != null) {
+                            urls = result.urls
+                            setInterval(LoopWebsite, frequency)
+                        }
+                    });
                 }
             });
         }
     });
 }
-
-reload()
 
 chrome.runtime.onMessage.addListener((request, sender, reply) => {
     console.log(
@@ -88,7 +94,7 @@ chrome.runtime.onMessage.addListener((request, sender, reply) => {
 
     if (request.command == "query-is-looping") {
         if (request.shouldToggle && request.urlArray != null) {
-            isActive = !isActive;
+            isActive = !isActive
             console.log("background toggle: " + isActive)
             urls = request.urlArray
             console.log(urls)
@@ -99,3 +105,10 @@ chrome.runtime.onMessage.addListener((request, sender, reply) => {
 
     return true
 });
+
+chrome.action.onClicked.addListener((tab) => {
+    console.log('background click state: ' + tab.id)
+    isActive = !isActive
+})
+
+reload()

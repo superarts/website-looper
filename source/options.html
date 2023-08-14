@@ -15,11 +15,36 @@ limitations under the License.
 -->
 
 <html>
-<head><title>SuperArts Website Looper</title></head>
+<head>
+    <title>SuperArts Website Looper</title>
+    <style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+    </style>
+    <script src="options.js"></script>
+</head>
 
 <body>
     <h1>Website Looper</h1>
     <p>Loop through and reload the current page with a list of websites with a timer interval.</p>
+    <h2>Options</h2>
+    <textarea id="textAreaURLs" name="urls" rows="10" cols="80" placeholder="Enter website URLs here. Each line should contain a full URL string, without leading or trailing spaces. If it's not a valid URL, it will be treated as a comment. It is recommended to avoid using multi-line comments, and comments should come before URLs."></textarea>
+    <hr />
+    <label for="inputInterval">Website loading interval: </label>
+    <input type="number" id="inputInterval" name="interval" min="5" max="3600" value="60"> second(s)</input>
+    <br />
+    <label for="inputFrequency">Timer frequency: </label>
+    <input type="number" id="inputFrequency" name="frequency" min="1" max="60" value="10"> second(s)</input> <hr /> <button id="buttonSave">Save</button>
+    <!--
+        <p id="paragraphURLs">Websites: 0</p>
+    -->
+    <hr />
+    <table frame="box" id="tableURLs">Websites</table>
+    <hr />
+    <button id="buttonToggle">Toggle</button>
+    <hr />
     <h2>Features</h2>
     <ul>
         <li>Save a website list with notes and URLs on your chrome account.</li>
@@ -28,11 +53,12 @@ limitations under the License.
     </ul>
     <h2>How to use</h2>
     <ul>
-        <li>Left click the extension button to show the main UI - it is highly suggested to ping the button because it interact with the current browser window/tab.</li>
+        <li>Right click the extension button, and choose `Options` to show the main UI - it is highly suggested to ping the button because it interact with the current browser window/tab.</li>
         <li>Edit your website list. It is suggested to add a note in line 1, add a website address in line 2, add another note in line 2, add another website address in line 4, and so on.</li>
         <li>Optional: edit Website loading interval. It means after a given seconds (60 seconds by default), the current page will be refreshed.</li>
         <li>Optional: edit Timer frequency. It means after a given seconds (10 seconds by default), this extension checks whether the page should be refreshed, and update badge text on the extension icon.</li>
         <li>Use the toggle button on the bottom of the UI to start/stop auto reloading.</li>
+        <li>After the website list is created, click the extension button to toggle looping.</li>
     </ul>
     <h2>About security concerns</h2>
     <ul>
@@ -63,8 +89,7 @@ limitations under the License.
         <br>
         <div id="status"></div>
         <button id="save">Save</button>
-        <script src="options.js"></script>
-        -->
+    -->
 </body>
 
 </html>
